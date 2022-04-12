@@ -13,6 +13,7 @@
 // -----------------------------------------------------------------------------
 // Setup
 // -----------------------------------------------------------------------------
+//date_default_timezone_set('UTC');
 set_time_limit(120); // 2 minutes
 
 $options = [];
@@ -58,6 +59,7 @@ function test_benchmark(array $settings)
 {
     $result = [];
     $result['version'] = '1.7';
+    $result['sysinfo']['time_zone'] = date_default_timezone_get();
     $result['sysinfo']['time'] = date('Y-M-d H:i:s');
     $result['sysinfo']['php_version'] = PHP_VERSION;
     $result['sysinfo']['platform'] = PHP_OS;
@@ -292,6 +294,7 @@ function print_html_result(array $data, bool $showServerName = true)
     $result .= '<thead><tr><th>System Info</th><th></th></tr></thead>';
     $result .= '<tbody>';
     $result .= '<tr class="even"><td>Script Version</td><td>' . h($data['version']) . '</td></tr>';
+    $result .= '<tr class="even"><td>Time Zone</td><td>' . h($data['sysinfo']['time_zone']) . '</td></tr>';
     $result .= '<tr class="even"><td>Time</td><td>' . h($data['sysinfo']['time']) . '</td></tr>';
 
     if (!empty($data['sysinfo']['xdebug'])) {

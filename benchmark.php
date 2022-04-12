@@ -18,13 +18,19 @@ set_time_limit(120); // 2 minutes
 $options = [];
 
 // Show or hide the server name and IP address
-$showServerName = false;
+$showServerName = true;
 
 // Optional: mysql performance test
-//$options['db.host'] = '';
-//$options['db.user'] = '';
-//$options['db.pw'] = '';
-//$options['db.name'] = '';
+
+//CREATE DATABASE `test_db`CHARACTER SET utf8;
+//CREATE USER 'test_user'@'%' IDENTIFIED BY 'test_password';
+//FLUSH PRIVILEGES;
+//GRANT SELECT ON `test_db`.* TO 'test_user'@'%';
+
+$options['db.host'] = 'localhost';
+$options['db.user'] = 'test_user';
+$options['db.pw'] = 'test_password';
+$options['db.name'] = 'test_db';
 
 // -----------------------------------------------------------------------------
 // Main
@@ -39,7 +45,7 @@ if (isset($_GET['json'])) {
     echo json_encode($benchmarkResult, JSON_PRETTY_PRINT);
 } else {
     // html output
-    echo print_html_result($benchmarkResult, $showServerName);
+    print_html_result($benchmarkResult, $showServerName);
 }
 
 exit;
@@ -51,12 +57,12 @@ exit;
 function test_benchmark(array $settings)
 {
     $result = [];
-    $result['version'] = '1.6';
-    $result['sysinfo']['time'] = date('Y-m-d H:i:s');
+    $result['version'] = '1.7';
+    $result['sysinfo']['time'] = date('Y-M-d H:i:s');
     $result['sysinfo']['php_version'] = PHP_VERSION;
     $result['sysinfo']['platform'] = PHP_OS;
     $result['sysinfo']['server_name'] = $_SERVER['SERVER_NAME'];
-    $result['sysinfo']['server_addr'] = $_SERVER['SERVER_ADDR'];
+    $result['sysinfo']['server_addr'] = $_SERVER['REMOTE_ADDR'];
     $result['sysinfo']['xdebug'] = in_array('xdebug', get_loaded_extensions());
 
     $timeStart = microtime(true);
@@ -285,7 +291,7 @@ function print_html_result(array $data, bool $showServerName = true)
     $result = '<table cellspacing="0">';
     $result .= '<thead><tr><th>System Info</th><th></th></tr></thead>';
     $result .= '<tbody>';
-    $result .= '<tr class="even"><td>Version</td><td>' . h($data['version']) . '</td></tr>';
+    $result .= '<tr class="even"><td>Script Version</td><td>' . h($data['version']) . '</td></tr>';
     $result .= '<tr class="even"><td>Time</td><td>' . h($data['sysinfo']['time']) . '</td></tr>';
 
     if (!empty($data['sysinfo']['xdebug'])) {
